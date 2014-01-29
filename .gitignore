@@ -1,3 +1,5 @@
 dist/*
 build/*
 *.pyc
+sphinxcontrib_runcode.egg-info/
+sphinxcontrib_runcode.egg-info/*
