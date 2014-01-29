@@ -36,3 +36,14 @@ To create a tar.gz
 
     python setup.py sdist
 
+Download 
+========
+
+https://dl.dropbox.com/s/2y5eomikg8gqg9g/sphinxcontrib-runcode-0.0.1.tar.gz
+
+pip install
+===========
+
+    pip install https://dl.dropbox.com/s/2y5eomikg8gqg9g/sphinxcontrib-runcode-0.0.1.tar.gz
+
+
