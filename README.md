@@ -14,8 +14,28 @@ To enable this extension, add the following line to ``conf.py``::
 Now you can include a runnable link to your literalinclude file.
 
     .. runcode:: path/to/your/file
-       :language: c
+       :language: C
        :codesite: codepad
+
+Or
+
+    .. runcode:: path/to/your/file
+       :language: C
+       :codesite: ideone
+
+Ideone
+======
+
+When using ideone for for runcode, you need to create an account with
+http://ideone.com/account and provide your **APIUSER** and **APIPASSWORD**
+in the file: sphinxcontrib/runcode.py
+
+* Create the tar.gz packager **after*your set your APIUSER and APIPASSWORD and
+  then do the pip install.
+
+* Dont expose your APIUSER and APIPASSWORD. Since ideone does not oauth, others
+  can use yours if you use.
+
 
 
 This will get replaced by
@@ -27,8 +47,9 @@ Which the use can click and visit codepad.org to run directly.
 Supported Values
 ================
 
-* Language: c, python
-* codesite: codepad
+* Language: C, Python
+* codesite: codepad, ideone
+
 
 Runbook
 =======

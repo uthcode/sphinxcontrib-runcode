@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 NAME = "sphinxcontrib-runcode"
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 DESCRIPTION = "Post included code in an executable pastebin like codepad / ideone."
 LONG_DESCRIPTION = open('README.md').read()
 AUTHOR = "Senthil Kumaran (Uthcode)"
@@ -21,6 +21,7 @@ CLASSIFIERS = [
 ]
 PLATFORMS = 'any'
 REQUIRES = ['Sphinx']
+INSTALL_REQUIRES = ['ideone']
 PACKAGES = ['sphinxcontrib']
 ZIP_SAFE = False
 INCLUDE_PACKAGE_DATA = True
@@ -39,6 +40,7 @@ setup(name=NAME,
       classifiers=CLASSIFIERS,
       platforms=PLATFORMS,
       requires=REQUIRES,
+      install_requires=INSTALL_REQUIRES,
       packages=PACKAGES,
       zip_safe=ZIP_SAFE,
       include_package_data=INCLUDE_PACKAGE_DATA,

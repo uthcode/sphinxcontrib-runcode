@@ -4,6 +4,17 @@ import urllib2
 from docutils import nodes
 from docutils.parsers.rst import Directive
 
+from ideone import Ideone
+
+IDEONE_AUTHENTICATED = False
+
+try:
+    ideone_auth = Ideone('APIUSER', 'APIPASSWORD')
+except Exception as e:
+    IDEONE_AUTHENTICATED = False
+else:
+    IDEONE_AUTHENTICATED = True
+
 class run_code_block(nodes.General, nodes.FixedTextElement):
     pass
 
@@ -37,7 +48,7 @@ class RunCode(Directive):
             if self.options['codesite'] == "codepad":
                 retnode["codesite"] = "http://codepad.org"
             elif self.options["codesite"] == "ideone":
-                retnode["codesite"] = "http://ideone.org"
+                retnode["codesite"] = "http://ideone.com"
         if self.options.get("run", ''):
             if self.options["run"] in ("True", "true"):
                 retnode["run"] = True
@@ -55,19 +66,26 @@ def visit_block(self, node):
     code = node.get('contents')
     language = node.get('language')
 
-    values = {'lang' : language,
-              'code' : code,
-              'submit':'Submit'}
+    if url == 'http://codepad.org':
+        values = {'lang' : language,
+                  'code' : code,
+                  'submit':'Submit'}
 
-    data = urllib.urlencode(values)
-    runcode_url = url
-    try:
-        response = urllib2.urlopen(url, data)
-    except (urllib2.URLError, httplib.HTTPException) as e:
-        print(str(e))
-    else:
-        codepage = response.geturl()
-        runcode_url = codepage + '/fork'
+        data = urllib.urlencode(values)
+        runcode_url = url
+        try:
+            response = urllib2.urlopen(url, data)
+        except (urllib2.URLError, httplib.HTTPException) as e:
+            print(str(e))
+        else:
+            codepage = response.geturl()
+            runcode_url = codepage + '/fork'
+    elif url == 'http://ideone.com':
+        if IDEONE_AUTHENTICATED and ideone_auth.test()["error"] == "OK":
+            response = ideone_auth.create_submission(code,language,run=False)
+            runcode_url = "http://ideone.com/fork/%s" % (response['link'])
+        else:
+            runcode_url = "http://ideone.com"
 
     fill_header = {'runcode_url': runcode_url}
 
