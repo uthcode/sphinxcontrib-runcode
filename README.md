@@ -56,15 +56,10 @@ Runbook
 To create a tar.gz
 
     python setup.py sdist
-
-Download 
-========
-
-https://dl.dropbox.com/s/2y5eomikg8gqg9g/sphinxcontrib-runcode-0.0.1.tar.gz
-
-pip install
-===========
-
-    pip install https://dl.dropbox.com/s/2y5eomikg8gqg9g/sphinxcontrib-runcode-0.0.1.tar.gz
+    
+Install
+=======
+    pip install dist/sphinxcontrib-runcode-0.0.2.tar.gz
 
 
+You can also place the tar.gz in a public url (like dl.dropbox.com) and list it in requirements.txt if you are are going to use it in a hosted solution.
