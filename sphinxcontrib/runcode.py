@@ -89,7 +89,7 @@ def visit_block(self, node):
 
     fill_header = {'runcode_url': runcode_url}
 
-    divblock = ("""<a href="{runcode_url}" target="_blank">Run this</a><br/>""").format(**fill_header)
+    divblock = ("""<a href="{runcode_url}" class='button' target="_blank">Run this</a><br/>""").format(**fill_header)
     self.body[-1] = divblock
     raise nodes.SkipNode
 
