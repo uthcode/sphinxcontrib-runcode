@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 NAME = "sphinxcontrib-runcode"
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 DESCRIPTION = "Post included code in an executable pastebin like codepad / ideone."
 LONG_DESCRIPTION = open('README.md').read()
 AUTHOR = "Senthil Kumaran (Uthcode)"
