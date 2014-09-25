@@ -1,12 +1,18 @@
 import httplib
+import hashlib
+import os
 import urllib
 import urllib2
+import pickle
+
 from docutils import nodes
 from docutils.parsers.rst import Directive
 
 from ideone import Ideone
 
 IDEONE_AUTHENTICATED = False
+
+CODE_MAP_FILE_NAME = 'codemap.dict'
 
 try:
     ideone_auth = Ideone('APIUSER', 'APIPASSWORD')
@@ -41,9 +47,17 @@ class RunCode(Directive):
 
         if self.options.get("language", ""):
             if self.options["language"] in ("Python", "python", "py"):
-                retnode["language"] = "Python"
+                retnode["language"] = "python"
             if self.options["language"] in ("C", "c"):
-                retnode["language"] = "C"
+                retnode["language"] = "c"
+            if self.options["language"] in ("Java", "java"):
+                retnode["language"] = "java"
+            if self.options["language"] in ("scala", "Scala"):
+                retnode["language"] = "scala"
+            if self.options["language"] in ("ruby", "Ruby"):
+                retnode["language"] = "ruby"
+            if self.options["language"] in ("go", "Go"):
+                retnode["language"] = "go"
         if self.options.get("codesite", ""):
             if self.options['codesite'] == "codepad":
                 retnode["codesite"] = "http://codepad.org"
@@ -81,11 +95,30 @@ def visit_block(self, node):
             codepage = response.geturl()
             runcode_url = codepage + '/fork'
     elif url == 'http://ideone.com':
-        if IDEONE_AUTHENTICATED and ideone_auth.test()["error"] == "OK":
-            response = ideone_auth.create_submission(code,language,run=False)
-            runcode_url = "http://ideone.com/fork/%s" % (response['link'])
+        code_md5 = hashlib.md5(code).hexdigest()
+        if os.path.exists(CODE_MAP_FILE_NAME):
+            with open(CODE_MAP_FILE_NAME) as pickled_codemap:
+                contents = pickled_codemap.read()
+                if contents:
+                    codemap = pickle.loads(contents)
+                else:
+                    codemap = {}
         else:
-            runcode_url = "http://ideone.com"
+            codemap = {}
+        if code_md5 in codemap:
+            response_link = codemap[code_md5]
+        else:
+            if IDEONE_AUTHENTICATED and ideone_auth.test()["error"] == "OK":
+                response = ideone_auth.create_submission(code,language,run=False)
+                response_link = response['link']
+                codemap[code_md5] = response_link
+            else:
+                response_link = ""
+
+        runcode_url = "http://ideone.com/fork/%s" % (response_link)
+        # pickle codemap and store
+        with open(CODE_MAP_FILE_NAME, 'w') as pickled_codemap:
+            pickle.dump(codemap, pickled_codemap)
 
     fill_header = {'runcode_url': runcode_url}
 
