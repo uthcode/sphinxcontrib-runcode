@@ -26,19 +26,22 @@ Or
 Ideone
 ======
 
-When using ideone for for runcode, you need to create an account with
-http://ideone.com/account and provide your **APIUSER** and **APIPASSWORD**
-in the file: sphinxcontrib/runcode.py
+When using ideone for for runcode, you need to create an account with http://ideone.com/account and provide your
+**APIUSER** and **APIPASSWORD** in the file: `sphinxcontrib/runcode.py`
 
-* Create the tar.gz packager **after** your set your APIUSER and APIPASSWORD and then do the pip install.
+Use this option only when you build this extension locally, **do not bundle the APIUSER and APIPASSWORD and upload
+the .tar.gz file to be pip-installable from any location.
 
-* Don't expose your APIUSER and APIPASSWORD. Since ideone does not oauth, others can use yours if you use.
+* Create the tar.gz packager your set your APIUSER and APIPASSWORD and then do the pip install on your local system.
 
-This will get replaced by
+::
 
-    Run This.
+    pip install sphinxcontrib-runcode-0.2.0.tar.gz
 
-Which the use can click and visit codepad.org to run directly.
+This extension will take the runcode rules in the sphinx files and replace it with a big green button, pointing to
+running this in the IDEONE ide.
+
+This will create a file `codemap.json` which is a mapping of the particular source file and the IDEONE location.
 
 Supported Values
 ================
@@ -53,9 +56,28 @@ To create a tar.gz
 
     python setup.py sdist
     
-Install
-=======
+Install it locally
+
     pip install dist/sphinxcontrib-runcode-0.0.2.tar.gz
 
 
-You can also place the tar.gz in a public url (like dl.dropbox.com) and list it in requirements.txt if you are are going to use it in a hosted solution.
+Create build and codemap.json
+
+::
+
+    make html
+
+
+Commit codemap.json
+
+::
+
+    git add codemap.json
+    git commit -am "Updated Code Mappings."
+
+
+Using it with readthedocs.org
+=============================
+
+If you are using it readthedocs.org, do not provide **APIUSER** and **APIPASSWORD**, instead build it locally and
+update the `codemap.json` and publish your updated `codemap.json` everytime the your repository code changes.

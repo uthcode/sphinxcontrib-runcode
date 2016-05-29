@@ -1,9 +1,11 @@
 import hashlib
 import httplib
+import json
 import os
-import pickle
 import urllib
 import urllib2
+
+from collections import OrderedDict
 
 from docutils import nodes
 from docutils.parsers.rst import Directive
@@ -12,8 +14,7 @@ from ideone import Ideone
 
 IDEONE_AUTHENTICATED = False
 
-CODE_MAP_FILE_NAME = 'codemap.dict'
-
+CODE_MAP_JSON = 'codemap.json'
 
 try:
     ideone_auth = Ideone('APIUSER', 'APIPASSWORD')
@@ -101,17 +102,16 @@ def visit_block(self, node):
         else:
             codepage = response.geturl()
             runcode_url = codepage + '/fork'
+
     elif url == 'http://ideone.com':
+
         code_md5 = hashlib.md5(code).hexdigest()
-        if os.path.exists(CODE_MAP_FILE_NAME):
-            with open(CODE_MAP_FILE_NAME) as pickled_codemap:
-                contents = pickled_codemap.read()
-                if contents:
-                    codemap = pickle.loads(contents)
-                else:
-                    codemap = {}
+        if os.path.exists(CODE_MAP_JSON):
+            with open(CODE_MAP_JSON) as codemap_json_fh:
+                codemap = json.load(codemap_json_fh)
         else:
-            codemap = {}
+            codemap = OrderedDict()
+
         if code_md5 in codemap:
             response_link = codemap[code_md5]
         else:
@@ -123,9 +123,9 @@ def visit_block(self, node):
                 response_link = ""
 
         runcode_url = "http://ideone.com/fork/%s" % (response_link)
-        # pickle codemap and store
-        with open(CODE_MAP_FILE_NAME, 'w') as pickled_codemap:
-            pickle.dump(codemap, pickled_codemap)
+
+        with open(CODE_MAP_JSON, 'w') as codemap_json_fh:
+            json.dump(codemap, codemap_json_fh, sort_keys=True)
 
     fill_header = {'runcode_url': runcode_url}
 
