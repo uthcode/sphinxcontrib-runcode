@@ -1,9 +1,9 @@
-import httplib
 import hashlib
+import httplib
 import os
+import pickle
 import urllib
 import urllib2
-import pickle
 
 from docutils import nodes
 from docutils.parsers.rst import Directive
@@ -14,6 +14,7 @@ IDEONE_AUTHENTICATED = False
 
 CODE_MAP_FILE_NAME = 'codemap.dict'
 
+
 try:
     ideone_auth = Ideone('APIUSER', 'APIPASSWORD')
 except Exception as e:
@@ -21,27 +22,29 @@ except Exception as e:
 else:
     IDEONE_AUTHENTICATED = True
 
-class run_code_block(nodes.General, nodes.FixedTextElement):
+
+class RunCodeBlock(nodes.General, nodes.FixedTextElement):
     pass
+
 
 class RunCode(Directive):
     has_content = False
     required_arguments = 1
     optional_arguments = 0
-    option_spec = dict(codesite=str,
-                       language=str,
-                       run=True)
+    option_spec = dict(codesite=str, language=str, run=True)
 
     def run(self):
         document = self.state.document
         env = document.settings.env
         rel_filename, filename = env.relfn2path(self.arguments[0])
+
         try:
             with open(filename) as fd:
                 contents = fd.read()
         except IOError:
             contents = ""
-        retnode = run_code_block(contents, contents, source=filename)
+
+        retnode = RunCodeBlock(contents, contents, source=filename)
 
         retnode["contents"] = contents
 
@@ -58,19 +61,23 @@ class RunCode(Directive):
                 retnode["language"] = "ruby"
             if self.options["language"] in ("go", "Go"):
                 retnode["language"] = "go"
+
         if self.options.get("codesite", ""):
             if self.options['codesite'] == "codepad":
                 retnode["codesite"] = "http://codepad.org"
             elif self.options["codesite"] == "ideone":
                 retnode["codesite"] = "http://ideone.com"
+
         if self.options.get("run", ''):
             if self.options["run"] in ("True", "true"):
                 retnode["run"] = True
 
         return [retnode]
 
+
 def visit_block(self, node):
     """Visit hidden code block"""
+
     try:
         self.visit_literal_block(node)
     except nodes.SkipNode:
@@ -131,6 +138,7 @@ def depart_block(self, node):
     """Depart hidden code block"""
     # Stub because of SkipNode in visit
 
+
 def setup(app):
     app.add_directive('runcode', RunCode)
-    app.add_node(run_code_block, html=(visit_block, depart_block))
+    app.add_node(RunCodeBlock, html=(visit_block, depart_block))

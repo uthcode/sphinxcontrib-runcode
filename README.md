@@ -30,13 +30,9 @@ When using ideone for for runcode, you need to create an account with
 http://ideone.com/account and provide your **APIUSER** and **APIPASSWORD**
 in the file: sphinxcontrib/runcode.py
 
-* Create the tar.gz packager **after*your set your APIUSER and APIPASSWORD and
-  then do the pip install.
+* Create the tar.gz packager **after** your set your APIUSER and APIPASSWORD and then do the pip install.
 
-* Dont expose your APIUSER and APIPASSWORD. Since ideone does not oauth, others
-  can use yours if you use.
-
-
+* Don't expose your APIUSER and APIPASSWORD. Since ideone does not oauth, others can use yours if you use.
 
 This will get replaced by
 

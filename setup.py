@@ -5,7 +5,7 @@ NAME = "sphinxcontrib-runcode"
 VERSION = "0.1.0"
 DESCRIPTION = "Post included code in an executable pastebin like codepad / ideone."
 LONG_DESCRIPTION = open('README.md').read()
-AUTHOR = "Senthil Kumaran (Uthcode)"
+AUTHOR = "Senthil Kumaran"
 AUTHOR_EMAIL = "senthil@uthcode.com"
 LICENSE = "BSD"
 URL = "http://github.com/uthcode/sphinxcontrib-runcode"
@@ -21,6 +21,7 @@ CLASSIFIERS = [
 ]
 PLATFORMS = 'any'
 REQUIRES = ['Sphinx']
+
 # Dependency https://pypi.python.org/pypi/ideone/0.2.0
 INSTALL_REQUIRES = ['ideone']
 PACKAGES = ['sphinxcontrib']
